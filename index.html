@@ -1,0 +1,578 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/austin2014.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/austin2014/austin_logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>The hook</h2>
+    </hgroup>
+    <article>
+      <p>@todo Maybe some details on the successes Tableau's seen with Pantheon and CI. # of builds to date...  What it was like before, what we're capable of now.</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Goals</h2>
+    </hgroup>
+    <article>
+      <p>By the end of this session, you'll have everything to start practicing CI on your Pantheon site. In particular you'll walk away with:</p>
+      <ul class="build">
+        <li>An overview of CI, and how Pantheon makes it easier</li>
+        <li>Requisite tools and services to get up and running</li>
+        <li>A fully configured yaml file; just add credentials and tests!</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>A brief intro to CI</h2>
+      <h3>What, why, and how</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>What is continuous integration?</h2>
+    </hgroup>
+    <article>
+      <h3>CI is a development practice whereby...</h3><br />
+      <ul class="build fade">
+        <li>Developers check-in code regularly</li>
+        <li>Check-ins are built & verified automatically</li>
+        <li>Developers are notified of the build's status</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Why continuous integration?</h2>
+    </hgroup>
+    <article>
+      <ul class="build fade">
+        <li>Detect and fix problems & regressions earlier</li>
+        <li>Increase productivity & project velocity</li>
+        <li>Gain confidence in your deployments</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>How does a typical CI workflow look?</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img style="width:700px;" src="images/ci-draft.png" alt="Draft of how a typical CI workflow is set up" title="Continuous integration diagram">
+      <footer class="source">@todo Nicer diagram, remove references to subversion/hudson</footer>
+    </article>
+  </slide>
+
+
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Pantheon power tools</h2>
+      <h3>Multidev, Terminus/CLI, oh my!</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Pantheon Multidev</h2>
+      <h3>Cloud dev environments for teams</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>On-demand environment creation/destruction</li>
+        <li>Environments match production configurations</li>
+        <li>Workflow ops to easily sync content/assets</li>
+      </ul>
+      <br /><h4>Problems solved by multidev...</h4><br />
+      <ul>
+        <li>Local/development environment reconciliation</li>
+        <li>Advanced git/dev/qa/review workflows</li>
+        <li>"It worked on my machine"</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Terminus: the Pantheon CLI</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Create new sites, spin up new multidev environments</li>
+        <li>Trigger workflow ops: deployment, content sync</li>
+        <li>Securely connect to mysql, redis, etc.</li>
+      </ul>
+      <p>In practice, it might look something like this.</p>
+      <pre class="prettyprint" data-lang="bash">#!/bin/bash
+PUUID='aaaaaaaa-1111-bbbb-2222-cccccccccccc'
+PEMAIL='your-email@example.com'
+PPASS='your-password-here'
+
+drush pauth $PEMAIL --password=$PPASS
+drush paliases
+<b>drush psite-clone $PUUID live test -y</b>
+    </article>
+  </slide>
+
+
+
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Building our CI infrastructure</h2>
+      <h3>Travis CI, GitHub, Multidev, and Terminus</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>High-level architecture</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img style="width:700px;" src="images/ci-draft.png" alt="Draft of how a typical CI workflow is set up" title="Continuous integration diagram">
+      <footer class="source">@todo Should match former diagram, but with logos slapped over the servers</footer>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Prerequisites</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>A Pantheon site with multidev enabled [<a href="https://www.getpantheon.com/multidev">what</a>]</li>
+        <li>A Pantheon account with access to the site [<a href="http://helpdesk.getpantheon.com/customer/portal/articles/621653-team-management">how</a>]
+          <ul>
+            <li>This is in addition to your own Pantheon account</li>
+            <li>You'll want to remember the e-mail/password for later</li>
+          </ul>
+        <li>A GitHub account (personal or organization will do)
+          <ul>
+            <li>You also probably want a private repo for your site [<a href="https://github.com/pricing">what</a>]</li>
+          </ul>
+        </li>
+        </li>
+        <li>A Travis CI account, linked to your GitHub account [<a href="http://docs.travis-ci.com/user/getting-started/#Step-one%3A-Sign-in">how</a>]</li>
+        <li>The Travis CLI client [<a href="https://github.com/travis-ci/travis.rb#installation">how</a>]</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Repository preparation</h2>
+    </hgroup>
+    <article>
+      <ul class="build fade">
+        <li>
+          <p>If you haven't already, clone your site from Pantheon</p>
+          <pre class="prettify">git clone ssh://codeserver.dev.etc@etc.drush.in:2222/~repository.git my-site</pre>
+        </li>
+        <li>
+          <p>Add a <em>.travis.yml</em> file to the root of your codebase, and commit it</p>
+          <pre class="prettify">touch .travis.yml
+git add .travis.yml && git commit -m "Adding Travis config file."</pre>
+        </li>
+        <li>Enable builds for your repository in Travis <img src="images/travis-toggle.png" /></li>
+        <li>
+          <p>Add your private GitHub repo as a git remote, and push</p>
+          <pre class="prettify">git remote add github git@github.com:my-company/my-site.git
+git push github master</pre>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Your first build</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <p>After pushing, Travis probably attempted to build your project as a Ruby app, failed, and e-mailed you a notification, explaining as much.</p>
+      <img style="width:700px;" src="images/travis-initial-fail.png" />
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Configuring Travis Builds</h2>
+    </hgroup>
+    <article>
+      <p>We need to teach Travis how to build our site/app in .travis.yml:</p>
+      <pre class="prettify" data-lang="yaml">language: php
+php: 5.3
+env:
+  - PNAME='my-site'
+  - PSITE='some-name'
+  - PUUID='aaaaaaaa-1111-bbbb-2222-cccccccccccc'
+  - PSOURCE='test'
+install:
+  - composer global require drush/drush:6.2.0
+before_script
+  - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE
+script:
+  - drush @pantheon.$PNAME.$PSITE test-run MySimpleTestClass --strict=0
+after_script:
+  - drush psite-edelete $PUUID $PSITE -y</pre>
+    </article>
+  </slide>
+
+
+
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>Build configuration deep-dive</h2>
+      <h3>Secure authentication & environment creation</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Installing dependencies</h2>
+    </hgroup>
+    <article>
+      <p>Ensure all dependencies are available on the Travis build server.</p>
+      <pre class="prettify" data-lang="yaml">install:
+  # Ensure the build doesn't get hung up on adding unknown hosts.
+  - echo "StrictHostKeyChecking no" > ~/.ssh/config
+ 
+  # Install drush.
+  - composer global require drush/drush:6.2.0
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+ 
+  # Install terminus.
+  - git clone https://github.com/pantheon-systems/terminus.git $HOME/.drush/terminus
+  - cd $HOME/.drush/terminus
+  - composer update --no-dev
+  - drush cc drush
+ 
+  # Install additional test dependencies here (like Casper, Behat, etc).</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Basic environment configuration</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>The following information is required to build your site/app.</p>
+      <pre class="prettify" data-lang="yaml">language: php
+php: 5.3
+env:
+  global:
+    # That random string in the URL when accessing your site's dashboard
+    - PUUID='aaaaaaaa-0000-bbbb-1111-cccccccccccc'
+
+    # The site name (e.g. live-<b>sitename</b>.gotpantheon.com)
+    - PNAME='site-name'
+
+    # The environment from which DB/files will be cloned
+    - PSOURCE='test'
+
+    # The authentication details for a Pantheon account with access to the site
+    - PEMAIL='your-account@example.com'
+    - PPASS='your-account-password'
+
+    # The host against which the build will be run
+    - PHOST="https://$TRAVIS_BRANCH-$PNAME.gotpantheon.com"</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Securing authentication details</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Do not keep credentials in plain text in your repo, even if it's private!</p>
+      <ul class="build fade">
+        <li>
+          <p>Use the Travis CLI to encrypt those values [<a href="http://docs.travis-ci.com/user/encryption-keys/">how</a>]</p>
+          <pre class="prettify" data-lang="bash">travis encrypt "PEMAIL='your-account@example.com'"</pre>
+        </li>
+        <li>
+          <p>Which will produce output like this:</p>
+          <pre class="prettify">secure: "22Yl4nERjtJPoinwa234"</pre>
+        </li>
+        <li>
+          <p>Which should replace those values in your .travis.yml</p>
+          <pre class="prettify" data-lang="yaml">env:
+  global:
+    # ...Trimmed for brevity...
+    - <b>secure: "22Yl4nERjtJPoinwa234Jbwi48Sj+02x"</b>
+    - <b>secure: "9CQP5l3ufUCLyGtc+HhsVHB1gNJrTz14"</b>
+
+    - PHOST="https://$TRAVIS_BRANCH-$PNAME.gotpantheon.com"</pre>
+</pre>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Basic environment build strategy</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Multidev environments are branch-based, but in this scenario, only GitHub and Travis know of the new code we're testing. Consequently, we'll need to push code from Travis' build server back up to Pantheon. To do so, you must do the following:</p>
+      <ul class="build fade">
+        <li>
+          <p>Generate a new, password-less SSH key [<a href="https://help.github.com/articles/generating-ssh-keys">how</a>]</p>
+          <ul>
+            <li>Add it to the Pantheon user's account [<a href="http://helpdesk.getpantheon.com/customer/portal/articles/366938-generating-ssh-keys#add-a-key-to-your-pantheon-account">how</a>]</li>
+            <li>Also add it to a GitHub account with read access to the repo [<a href="https://help.github.com/articles/generating-ssh-keys#step-3-add-your-ssh-key-to-github">how</a>]</li>
+          </ul>
+        </li>
+        <li>
+          <p>Add a base64-encoded version of the private key to .travis.yml with key "source_key" [<a href="http://docs.travis-ci.com/user/travis-pro/#How-can-I-configure-Travis-Pro-to-use-private-GitHub-repositories-as-dependencies%3F">how</a>], like this:</p>
+          <pre class="prettify" data-lang="yaml">source_key: LRVktLS0tLQpNSUlFb1FJQkFBS0NBUUVBeG1Zd1JOZUZvcmhldFQ2</pre>
+        </li>
+        <li>
+          <p>Which allows us to do stuff like this:</p>
+          <pre class="prettify" data-lang="yaml">before_script:
+  - git remote add p ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
+  - git push p $TRAVIS_BRANCH</pre>
+          <p>Corresponding to the multidev environment at <b>travisbranch</b>-sitename.gotpantheon.com</p>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Preparing the build</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>In this phase, we create our Pantheon environment and get ready to run tests.</p>
+      <pre class="prettify" data-lang="yaml">before_script:
+  # Authenticate with Pantheon via Terminus.
+  - drush pauth $PEMAIL --password=$PPASS
+
+  # Add Pantheon as a git remote, push to it, and create the environment.
+  - cd $TRAVIS_BUILD_DIR
+  - git remote add pantheon ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
+  - git push --force pantheon $TRAVIS_BRANCH
+  - drush psite-ecreate $PUUID $TRAVIS_BRANCH --source=$PSOURCE || true
+ 
+  # Update our drush aliases file.
+  - drush paliases
+  - drush cc drush
+
+  # Note that all subsequent drush commands must be run out of our drupal root.
+  - cd $HOME
+
+  # We can test deployments by running drush updb.
+  - drush @pantheon.$PNAME.$TRAVIS_BRANCH updb -y --strict=0
+ 
+  # Here, we can enable test dependencies, for example, SimpleTest.
+  - drush @pantheon.$PNAME.$TRAVIS_BRANCH en simpletest -y --strict=0</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Refining the build strategy</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>The build strategy described assumed only one build would occur per branch at any given time. In reality, this isn't flexible enough. Supporting it is easy:</p>
+      <ul class="build fade">
+        <li>
+          <p>Just add some random, unique bits to our environment name.</p>
+          <pre class="prettify" data-lang="yaml">env:
+  global:
+    # Note, the total length of PSITE cannot exceed 11 characters (currently).
+    - PSITE=$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 3)
+    - PSITE="ci-$TRAVIS_BUILD_NUMBER-$PSITE"</pre>
+        </li>
+        <li>
+          <p>And use our site/environment name instead of the branch name.</p>
+          <pre class="prettify" data-lang="yaml">before_script:
+  - git push --force pantheon $PSITE
+  - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE || true
+  - drush @pantheon.$PNAME.$PSITE updb -y --strict=0</pre>
+        </li>
+        <li>
+          <p>Resulting in tests being run against a URL like the following:</p>
+          <pre>https://ci-123-mysite.gotpantheon.com</pre>
+        </li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Running tests</h2>
+    </hgroup>
+    <article>
+      <p>The easiest part of the whole experience is running tests, it's up to you to write and maintain tests that adequately cover your app/site's use-cases.</p>
+      <pre class="prettify" data-lang="yaml">script:
+  # What you put here depends entirely on what tests and testing frameworks you use!
+  # All that matters: failed tests must return status code 1, otherwise return 0.
+  # As an example; running a single SimpleTest class:
+  - drush @pantheon.$PNAME.$PSITE test-run MyTestClass --strict=0</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Cleaning up the build</h2>
+    </hgroup>
+    <article>
+      <p>After tests are done, regardless of build status, we should clean up our site on Pantheon.</p>
+      <pre class="prettify" data-lang="yaml">after_script:
+  # Destroy the Pantheon environment
+  - drush psite-edelete $PUUID $PSITE -y
+
+  # Delete the git branch we created.
+  - drush psite-bdel $PUUID --name=$PSITE -y</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Putting it all together (1/2)</h2>
+    </hgroup>
+    <article class="smaller">
+      <pre class="prettify" data-lang="yaml">language: php
+php: 5.3
+source_key: "base64_ssh_key_with_github_pantheon_access_here"
+env:
+  global:
+    - PUUID='aaaaaaaa-0000-bbbb-1111-cccccccccccc'
+    - PNAME='site-name'
+    - PSOURCE='test'
+    - secure: "encrypted_email_value_here"
+    - secure: "encrypted_password_value_here"
+    - PSITE=$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 4)
+    - PSITE="ci$TRAVIS_BUILD_NUMBER-$PSITE"
+    - PHOST="https://$PSITE-$PNAME.gotpantheon.com"
+install:
+  - echo "StrictHostKeyChecking no" > ~/.ssh/config
+  - composer global require drush/drush:6.2.0
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - git clone https://github.com/pantheon-systems/terminus.git $HOME/.drush/terminus
+  - cd $HOME/.drush/terminus
+  - composer update --no-dev
+  - drush cc drush
+  # Install additional test dependencies here (like Casper, Behat, etc).</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Putting it all together (2/2)</h2>
+    </hgroup>
+    <article class="smaller">
+      <pre class="prettify" data-lang="yaml">before_script:
+  - drush pauth $PEMAIL --password=$PPASS
+  - drush psite-bcreate $PUUID --name=$PSITE
+  - cd $TRAVIS_BUILD_DIR
+  - git checkout -b $PSITE
+  - git remote add pantheon ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
+  - git push --force pantheon $PSITE
+  - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE || true
+  - drush paliases
+  - drush cc drush
+  - cd $HOME
+  - drush @pantheon.$PNAME.$PSITE updb -y --strict=0
+  - drush @pantheon.$PNAME.$PSITE en simpletest -y --strict=0
+  - drush @pantheon.$PNAME.$PSITE vset -y simpletest_verbose 0 --strict=0
+script:
+  # Run real / additional tests here.
+  - drush @pantheon.$PNAME.$PSITE test-run MyTestClass --strict=0
+after_script:
+  - drush psite-edelete $PUUID $PSITE -y
+  - drush psite-bdel $PUUID --name=$PSITE -y</pre>
+    <footer class="source">Fully annotated source <a href="https://gist.github.com/iamEAP/8855842">available here</a>.</footer>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/sparkle_128.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>Thanks!</h2>
+      <p>Important contact information goes here.</p>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/austin2014/austin_logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>

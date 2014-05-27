@@ -577,6 +577,12 @@ article.smaller {
   }
 }
 
+.double-build {
+  > li:before {
+    content:'';
+  }
+}
+
 .popup .next .build {
   .to-build {
     opacity: 1;

@@ -489,7 +489,8 @@ env:
   - drush psite-edelete $PUUID $PSITE -y
 
   # Delete the git branch we created.
-  - drush psite-bdel $PUUID --name=$PSITE -y</pre>
+  - cd $TRAVIS_BUILD_DIR
+  - git push pantheon :$PSITE</pre>
     </article>
   </slide>
 
@@ -530,7 +531,6 @@ install:
     <article class="smaller">
       <pre class="prettify" data-lang="yaml">before_script:
   - drush pauth $PEMAIL --password=$PPASS
-  - drush psite-bcreate $PUUID --name=$PSITE
   - cd $TRAVIS_BUILD_DIR
   - git checkout -b $PSITE
   - git remote add pantheon ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
@@ -547,7 +547,8 @@ script:
   - drush @pantheon.$PNAME.$PSITE test-run MyTestClass --strict=0
 after_script:
   - drush psite-edelete $PUUID $PSITE -y
-  - drush psite-bdel $PUUID --name=$PSITE -y</pre>
+  - cd $TRAVIS_BUILD_DIR
+  - git push pantheon :$PSITE</pre>
     <footer class="source">Fully annotated source <a href="https://gist.github.com/iamEAP/8855842">available here</a>.</footer>
     </article>
   </slide>

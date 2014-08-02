@@ -23,7 +23,7 @@ var SLIDE_CONFIG = {
   // Author information
   presenters: [{
     name: 'Eric Peterson',
-    company: 'Senior Web Developer<br>Tableau Software',
+    company: 'Marketing Engineering & Ops<br>Tableau Software',
     twitter: '@iamEAP',
     github: 'http://github.com/iamEAP',
     gplus: 'https://plus.google.com/+iameap',

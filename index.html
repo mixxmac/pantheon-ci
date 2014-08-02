@@ -26,11 +26,11 @@ URL: https://code.google.com/p/io-2012-slides
 
 <slides class="layout-widescreen">
 
-  <slide class="logoslide nobackground">
+  <!--<slide class="logoslide nobackground">
     <article class="flexbox vcenter">
       <span><img src="images/austin2014/austin_logo.png"></span>
     </article>
-  </slide>
+  </slide>-->
 
   <slide class="title-slide segue nobackground">
     <aside class="gdbar"><img src="images/pantheon_128.png"></aside>
@@ -40,6 +40,15 @@ URL: https://code.google.com/p/io-2012-slides
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
     </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Tableau Software</h2>
+    </hgroup>
+    <article class="flexbox vcenter">
+      <img style="position:relative;bottom:15px;z-index:-1;" src="images/tableau-desktop.gif" alt="Tableau Desktop Gif" />
+    </article>
   </slide>
 
   <slide>
@@ -88,6 +97,7 @@ URL: https://code.google.com/p/io-2012-slides
         <li>An overview of CI, and how Pantheon makes it easier</li>
         <li>Requisite tools and services to get up and running</li>
         <li>A fully configured yaml file; just add credentials and tests!</li>
+        <li>Tips and gotchas when working with specific test frameworks</li>
       </ul>
     </article>
   </slide>
@@ -188,6 +198,18 @@ drush paliases
     </article>
   </slide>
 
+  <slide class="nobackground">
+    <hgroup>
+      <h2>CI Problems solved by Pantheon</h2>
+    </hgroup>
+    <article>
+      <ul class="build fade">
+        <li>Pantheon + multidev means: no need to manage infrastructure, even for your "build" servers</li>
+        <li>Completely managed environments mean no need to master configuration management</li>
+        <li>Command line access to workflow ops mean no need to manage orchestration</li>
+      </ul>
+    </article>
+  </slide>
 
 
 
@@ -240,17 +262,17 @@ drush paliases
       <ul class="build fade">
         <li>
           <p>If you haven't already, clone your site from Pantheon</p>
-          <pre class="prettify">git clone ssh://codeserver.dev.etc@etc.drush.in:2222/~repository.git my-site</pre>
+          <pre class="prettyprint">git clone ssh://codeserver.dev.etc@etc.drush.in:2222/~repository.git my-site</pre>
         </li>
         <li>
           <p>Add a <em>.travis.yml</em> file to the root of your codebase, and commit it</p>
-          <pre class="prettify">touch .travis.yml
+          <pre class="prettyprint">touch .travis.yml
 git add .travis.yml && git commit -m "Adding Travis config file."</pre>
         </li>
         <li>Enable builds for your repository in Travis <img src="images/travis-toggle.png" /></li>
         <li>
           <p>Add your private GitHub repo as a git remote, and push</p>
-          <pre class="prettify">git remote add github git@github.com:my-company/my-site.git
+          <pre class="prettyprint">git remote add github git@github.com:my-company/my-site.git
 git push github master</pre>
         </li>
       </ul>
@@ -273,7 +295,7 @@ git push github master</pre>
     </hgroup>
     <article>
       <p>We need to teach Travis how to build our site/app in .travis.yml:</p>
-      <pre class="prettify" data-lang="yaml">language: php
+      <pre class="prettyprint" data-lang="yaml">language: php
 php: 5.3
 env:
   - PNAME='my-site'
@@ -308,7 +330,7 @@ after_script:
     </hgroup>
     <article>
       <p>Ensure all dependencies are available on the Travis build server.</p>
-      <pre class="prettify" data-lang="yaml">install:
+      <pre class="prettyprint" data-lang="yaml">install:
   # Ensure the build doesn't get hung up on adding unknown hosts.
   - echo "StrictHostKeyChecking no" > ~/.ssh/config
  
@@ -332,7 +354,7 @@ after_script:
     </hgroup>
     <article class="smaller">
       <p>The following information is required to build your site/app.</p>
-      <pre class="prettify" data-lang="yaml">language: php
+      <pre class="prettyprint" data-lang="yaml">language: php
 php: 5.3
 env:
   global:
@@ -363,15 +385,15 @@ env:
       <ul class="build fade">
         <li>
           <p>Use the Travis CLI to encrypt those values [<a href="http://docs.travis-ci.com/user/encryption-keys/">how</a>]</p>
-          <pre class="prettify" data-lang="bash">travis encrypt "PEMAIL='your-account@example.com'"</pre>
+          <pre class="prettyprint" data-lang="bash">travis encrypt "PEMAIL='your-account@example.com'"</pre>
         </li>
         <li>
           <p>Which will produce output like this:</p>
-          <pre class="prettify">secure: "22Yl4nERjtJPoinwa234"</pre>
+          <pre class="prettyprint">secure: "22Yl4nERjtJPoinwa234"</pre>
         </li>
         <li>
           <p>Which should replace those values in your .travis.yml</p>
-          <pre class="prettify" data-lang="yaml">env:
+          <pre class="prettyprint" data-lang="yaml">env:
   global:
     # ...Trimmed for brevity...
     - <b>secure: "22Yl4nERjtJPoinwa234Jbwi48Sj+02x"</b>
@@ -400,11 +422,11 @@ env:
         </li>
         <li>
           <p>Add a base64-encoded version of the private key to .travis.yml with key "source_key" [<a href="http://docs.travis-ci.com/user/travis-pro/#How-can-I-configure-Travis-Pro-to-use-private-GitHub-repositories-as-dependencies%3F">how</a>], like this:</p>
-          <pre class="prettify" data-lang="yaml">source_key: LRVktLS0tLQpNSUlFb1FJQkFBS0NBUUVBeG1Zd1JOZUZvcmhldFQ2</pre>
+          <pre class="prettyprint" data-lang="yaml">source_key: LRVktLS0tLQpNSUlFb1FJQkFBS0NBUUVBeG1Zd1JOZUZvcmhldFQ2</pre>
         </li>
         <li>
           <p>Which allows us to do stuff like this:</p>
-          <pre class="prettify" data-lang="yaml">before_script:
+          <pre class="prettyprint" data-lang="yaml">before_script:
   - git remote add p ssh://codeserver.dev.$PUUID@codeserver.dev.$PUUID.drush.in:2222/~/repository.git
   - git push p $TRAVIS_BRANCH</pre>
           <p>Corresponding to the multidev environment at <b>travisbranch</b>-sitename.gotpantheon.com</p>
@@ -419,7 +441,7 @@ env:
     </hgroup>
     <article class="smaller">
       <p>In this phase, we create our Pantheon environment and get ready to run tests.</p>
-      <pre class="prettify" data-lang="yaml">before_script:
+      <pre class="prettyprint" data-lang="yaml">before_script:
   # Authenticate with Pantheon via Terminus.
   - drush pauth $PEMAIL --password=$PPASS
 
@@ -453,7 +475,7 @@ env:
       <ul class="build fade">
         <li>
           <p>Just add some random, unique bits to our environment name.</p>
-          <pre class="prettify" data-lang="yaml">env:
+          <pre class="prettyprint" data-lang="yaml">env:
   global:
     # Note, the total length of PSITE cannot exceed 11 characters (currently).
     - PSITE=$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 3)
@@ -461,7 +483,7 @@ env:
         </li>
         <li>
           <p>And use our site/environment name instead of the branch name.</p>
-          <pre class="prettify" data-lang="yaml">before_script:
+          <pre class="prettyprint" data-lang="yaml">before_script:
   - git push --force pantheon $PSITE
   - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE || true
   - drush @pantheon.$PNAME.$PSITE updb -y --strict=0</pre>
@@ -480,7 +502,7 @@ env:
     </hgroup>
     <article>
       <p>The easiest part of the whole experience is running tests, it's up to you to write and maintain tests that adequately cover your app/site's use-cases.</p>
-      <pre class="prettify" data-lang="yaml">script:
+      <pre class="prettyprint" data-lang="yaml">script:
   # What you put here depends entirely on what tests and testing frameworks you use!
   # All that matters: failed tests must return status code 1, otherwise return 0.
   # As an example; running a single SimpleTest class:
@@ -494,7 +516,7 @@ env:
     </hgroup>
     <article>
       <p>After tests are done, regardless of build status, we should clean up our site on Pantheon.</p>
-      <pre class="prettify" data-lang="yaml">after_script:
+      <pre class="prettyprint" data-lang="yaml">after_script:
   # Destroy the Pantheon environment
   - drush psite-edelete $PUUID $PSITE -y
 
@@ -509,7 +531,7 @@ env:
       <h2>Putting it all together (1/2)</h2>
     </hgroup>
     <article class="smaller">
-      <pre class="prettify" data-lang="yaml">language: php
+      <pre class="prettyprint" data-lang="yaml">language: php
 php: 5.3
 source_key: "base64_ssh_key_with_github_pantheon_access_here"
 env:
@@ -539,7 +561,7 @@ install:
       <h2>Putting it all together (2/2)</h2>
     </hgroup>
     <article class="smaller">
-      <pre class="prettify" data-lang="yaml">before_script:
+      <pre class="prettyprint" data-lang="yaml">before_script:
   - drush pauth $PEMAIL --password=$PPASS
   - cd $TRAVIS_BUILD_DIR
   - git checkout -b $PSITE
@@ -563,6 +585,263 @@ after_script:
     </article>
   </slide>
 
+
+
+
+  <slide class="segue dark nobackground">
+    <aside class="gdbar"><img src="images/druplicon_128.png"></aside>
+    <hgroup class="auto-fadein">
+      <h2>BDD tips and gotchas</h2>
+      <h3>Working with CasperJS, Behat, and SimpleTest</h3>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>CasperJS</h2>
+    </hgroup>
+    <article>
+      <p>CasperJS is a navigation scripting and testing utility built on top of PhantomJS (a headless browser).</p>
+      <h3>Strengths</h3>
+      <ul>
+        <li>PhantomJS comes pre-installed on all Travis build servers</li>
+        <li>Intuitive and familiar to front-end developers</li>
+        <li>Relatively easy to test complex client-side interactions</li>
+      </ul>
+      <h3>Weaknesses</h3>
+      <ul>
+        <li>Very little "framework" to speak of</li>
+        <li>Tests lack browser engine portability</li>
+        <li>Limited to a "blackbox" approach to testing</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Writing CasperJS tests for Pantheon</h2>
+    </hgroup>
+    <article class="smaller">
+      <ul>
+        <li>Keep a directory of Casper test files somewhere like <code>private/tests/casper</code></li>
+      </ul>
+      <pre class="prettyprint" data-lang="javascript">// For example: private/tests/casper/setup.js
+var _ROOT = casper.cli.get('host');
+casper.echo('Setting global variables');
+casper.echo('URI Root: ' + _ROOT);
+casper.test.done();</pre>
+      <pre class="prettyprint" data-lang="javascript">// For example: private/tests/casper/test-trial-lp.js
+casper.test.begin('Reg Form: Trial LP', function suite(tester) {
+  casper.start(_ROOT + _URI['landing-trial'], function() {
+    tester.assertExists('#user-register-form', 'Reg Form element exists');
+    tester.assertNotVisible('#user-register-form', 'Reg Form is invisible');
+    tester.assertExists('.cta a', 'CTA button elements exist');
+  });
+  casper.then(function() {
+    this.click('.cta a');
+    tester.assertVisible('#user-register-form', 'Reg Form is now visible');
+  });
+  casper.run(function() {
+    tester.done();
+  });
+});</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Preparing CasperJS for the build</h2>
+    </hgroup>
+    <article>
+      <h3>Stash convenience vars; install casper</h3>
+      <pre class="prettyprint" data-lang="yaml">env:
+  global:
+    - CHOST="https://$PSITE-$PNAME.gotpantheon.com"
+    - CTESTDIR=$TRAVIS_BUILD_DIR/private/tests/casper</pre>
+      <pre class="prettyprint" data-lang="yaml">install:
+  - git clone https://github.com/n1k0/casperjs.git $HOME/casperjs
+  - cd $HOME/casperjs
+  - git checkout tags/1.1-beta3
+  - export PATH=$PATH:`pwd`/bin</pre>
+      <p>It's also possible to stash casper within your repository; adds weight to your repo, but syncs up your team / speeds up the build.</p> 
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Running CasperJS tests</h2>
+    </hgroup>
+    <article>
+      <p>Once set up, running CasperJS is as simple as this line in the "script" phase.</p>
+      <pre class="prettyprint" data-lang="yaml">script:
+  - casperjs test --pre=$CTESTDIR/setup.js --host=$CHOST $CTESTDIR --fail-fast</pre>
+      <p>One minor annoyance: older versions of CasperJS would not exit correctly unless passed the <code>--fail-fast</code> flag.</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Behat</h2>
+    </hgroup>
+    <article>
+      <p>Behat is a BDD framework written in PHP.</p>
+      <h3>Strengths</h3>
+      <ul>
+        <li>Highly portable tests via pluggable web drivers</li>
+        <li>Excellent Drupal extension allows going beyond "blackbox" testing</li>
+        <li>Test writing is approachable by non-technical stakeholders</li>
+      </ul>
+      <h3>Weaknesses</h3>
+      <ul>
+        <li>Many limitations and subtleties when going beyond the "blackbox" approach</li>
+        <li>It's really easy to bog down your build with many slow tests</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Preparing Travis to run Behat</h2>
+    </hgroup>
+    <article class="smaller">
+      <p>Behat is installed via composer; strategies abound! the gist: composer.json file goes somewhere. Install it.</p>
+      <pre class="prettyprint" data-lang="yaml">env:
+  global:
+    - BPATH=$TRAVIS_BUILD_DIR/private/tests/behat
+install:
+  - cd $BPATH
+  - composer install --prefer-dist --dev</pre>
+      <p>Don't worry about Travis when configuring Behat in your behat.yml. Make it work locally, use the drush driver for everything and configure an alias (self for local).</p>
+      <pre class="prettyprint" data-lang="yaml">default:
+  paths:
+    features: 'features'
+  extensions:
+    Behat\MinkExtension\Extension:
+      base_url: http://mysite.local/
+    Drupal\DrupalExtension\Extension:
+      api_driver: 'drush'
+      drush:
+        alias: self</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Preparing Behat for the build</h2>
+    </hgroup>
+    <article>
+      <p>A few gotchas when preparing Behat during the build process</p>
+      <ul>
+        <li>Aliased drush calls from 6.x to 5.x are problematic: append --strict=0 everywhere.</li>
+        <li>Your behat.yml is configured for your local. Point it at Pantheon.</li>
+      </ul>
+      <p></p>
+      <pre class="prettyrint" data-lang="yaml">before_script:
+  # ...
+  - drush psite-ecreate $PUUID $PSITE --source=$PSOURCE || true
+  - drush paliases
+  - echo "\$aliases['$PNAME.$PSITE'] = \$aliases['$PNAME.$PSITE'] + array('strict' => '0');" >> \
+    $HOME/.drush/pantheon.aliases.drushrc.php
+  - drush cc drush
+  - sed -i -e "s,http://mysite.local,$PHOST,g" $BPATH/behat.yml
+  - sed -i -e "s, self, pantheon.$PNAME.$PSITE,g" $BPATH/behat.yml</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Running Behat tests</h2>
+    </hgroup>
+    <article>
+      <p>Running tests is simple; just make sure you run behat from outside the Drupal root.</p>
+      <pre class="prettyprint" data-lang="yaml">before_script:
+  - cd $HOME
+script:
+  - $BPATH/bin/behat --verbose --config $BPATH/behat.yml $BPATH/features</pre>
+      <p>Why? The drush driver runs drush from where behat was run. Some drush 6.x to 5.x aliased commands do not work when run from a drupal root, so get out of it.</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>SimpleTest</h2>
+    </hgroup>
+    <article>
+      <p>SimpleTest is an (outdated) unit and behavior testing framework for PHP. It's how Drupal core and contrib runs most tests on drupal.org.</p>
+      <h3>Strengths</h3>
+      <ul>
+        <li>Very deeply integrated with Drupal</li>
+        <li>Simple to install and run tests</li>
+      </ul>
+      <h3>Weaknesses</h3>
+      <ul>
+        <li>Tests lack portability</li>
+        <li>Test writing and debugging can be difficult and unintuitive</li>
+        <li>There's usually a better tool for the job</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Writing SimpleTest tests for Pantheon</h2>
+    </hgroup>
+    <article>
+      <p>Normally, SimpleTest tests are run against fresh installs using a multisite-like hack. But you can force your tests to use the original site and database by skipping most of the setup steps.</p>
+      <pre class="prettyprint" data-lang="php">class YourTestClass extends DrupalWebTestCase {
+  /**
+   * Override the setUp() method and force SimpleTest into using the existing
+   * database instead of setting up a dummy.
+   */
+  public function setUp() {
+    $this->setup = TRUE;
+    $this->public_files_directory = $this->originalFileDirectory .
+      '/simpletest/' . substr($this->databasePrefix, 10);
+  }
+}</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Preparing SimpleTest for the build</h2>
+    </hgroup>
+    <article>
+      <p>SimpleTest may be the simplest to prepare.</p>
+      <pre class="prettyprint" data-lang="yaml">before_script:
+  - drush @pantheon.$PNAME.$PSITE en simpletest -y --strict=0
+  - drush @pantheon.$PNAME.$PSITE vset -y simpletest_verbose 0 --strict=0</pre>
+      <p>Note, you'll want to disable verbosity; Pantheon will sometimes fail to write the verbose HTML file, causing an undue build error</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Running SimpleTest tests</h2>
+    </hgroup>
+    <article>
+      <p>The only caveat when running SimpleTest tests is that you should break out each class into its own test-run call. Drush will return non-standard exit codes if you run more than one class per command.</p>
+      <pre class="prettyprint" data-lang="yaml">script:
+  - drush @pantheon.$PNAME.$PSITE test-run MyTestClass --strict=0
+  - drush @pantheon.$PNAME.$PSITE test-run AnotherTestClass --strict=0</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Just scratching the surface</h2>
+    </hgroup>
+    <article>
+      <p>There are so many things beyond BDD that CI allows you to do in a fully integrated, automated way...
+      <ul>
+        <li>You could lint your code and throw warnings</li>
+        <li>You could do static code analysis</li>
+        <li>You could send notifications directly into your team chat room</li>
+        <li>You could deploy changes to production</li>
+      </ul>
+    </article>
+  </slide>
+
   <slide class="thank-you-slide segue nobackground">
     <aside class="gdbar right"><img src="images/sparkle_128.png"></aside>
     <article class="flexbox vleft auto-fadein">
@@ -574,11 +853,11 @@ after_script:
     </p>
   </slide>
 
-  <slide class="logoslide nobackground">
+  <!--<slide class="logoslide nobackground">
     <article class="flexbox vcenter">
       <span><img src="images/austin2014/austin_logo.png"></span>
     </article>
-  </slide>
+  </slide>-->
 
   <slide class="backdrop"></slide>
 
